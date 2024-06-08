@@ -42,10 +42,9 @@ with open(MEDI_JSON, "r") as f:
 
 processed_data = []
 for item in tqdm(data):
-    for i in range(len(item["query"])):
-        processed_data.append(
-            {"anchor": item["query"][1], "positive": item["pos"][1], "negative": item["neg"][1], "task_name": item["task_name"]}
-        )
+    processed_data.append(
+        {"anchor": item["query"][1], "positive": item["pos"][1], "negative": item["neg"][1], "task_name": item["task_name"]}
+    )
 
 df = pd.DataFrame(processed_data)
 dataset = Dataset.from_pandas(df)
