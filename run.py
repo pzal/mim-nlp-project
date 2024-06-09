@@ -68,6 +68,7 @@ args = SentenceTransformerTrainingArguments(
     push_to_hub_model_id=model_id,
     push_to_hub_organization=push_to_hub_organization,
     push_to_hub=True,
+    hub_private_repo=True,
 )
 
 

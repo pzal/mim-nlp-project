@@ -59,4 +59,4 @@ val_dataset = dataset.select(val_indices)
 
 dataset_dict = DatasetDict({"train": train_dataset, "val": val_dataset})
 
-dataset_dict.push_to_hub(HF_DATASET_REPO, revision=REVISION)
+dataset_dict.push_to_hub(HF_DATASET_REPO, revision=REVISION, private=True)
