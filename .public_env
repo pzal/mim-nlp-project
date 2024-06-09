@@ -1,1 +1,3 @@
-SENTENCE_TRANSFORMERS_HOME="/home/pw43/mim-nlp-project/models"
+SENTENCE_TRANSFORMERS_HOME="./models"
+OUTPUT_DIR="./output"
+NEPTUNE_PROJECT="small-scale-matryoshka/embedding-models"
