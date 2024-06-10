@@ -1,16 +1,12 @@
-import logging
-import sys
 import os
-import traceback
 import accelerate
-from datetime import datetime
 from dotenv import load_dotenv
 
 from datasets import load_from_disk
 from sentence_transformers import SentenceTransformer, losses, SentenceTransformerTrainer, SentenceTransformerTrainingArguments
-from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
-import neptune
 from transformers.integrations import NeptuneCallback
+
+from training_models.modules import create_sentence_transformer
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
@@ -26,7 +22,7 @@ def main():
     print(f"CUDA available: {torch.cuda.is_available()}")
     print(f"Number of CUDA devices: {torch.cuda.device_count()}")
 
-    model = SentenceTransformer("distilbert/distilroberta-base", device="cuda")
+    model = create_sentence_transformer("distilbert/distilroberta-base", output_dim=64)
 
     dataset = load_from_disk("data/medi/medi.arrow")
 

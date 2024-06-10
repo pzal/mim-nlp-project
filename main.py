@@ -1,10 +1,11 @@
 from sentence_transformers import SentenceTransformer
-
 from dotenv import load_dotenv
+
+from training_models.modules import create_sentence_transformer
 
 load_dotenv(".public_env")
 
-model = SentenceTransformer("distilbert/distilroberta-base", device="cuda")
+model = create_sentence_transformer("distilbert/distilroberta-base", output_dim=64)
 
 embeddings = model.encode(
     [
@@ -14,4 +15,4 @@ embeddings = model.encode(
     ]
 )
 
-print(embeddings)
+print(embeddings.shape)
