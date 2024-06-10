@@ -10,6 +10,7 @@ def create_sentence_transformer(model_name_or_path: str, output_dim: int, **kwar
     """
     Creates a SentenceTransformer model with a linear layer to adapt the output dimension. When asked dimension
     is the same as the base model, the linear layer is not added.
+
     :param model_name_or_path: same as in SentenceTransformer constructor
     :param output_dim: the dimension of the output embeddings
     :param kwargs: kwargs passed to SentenceTransformer constructor

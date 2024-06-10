@@ -1,6 +1,6 @@
 import mteb
 from sentence_transformers import SentenceTransformer
-from evaluation.model_mixins import PrependPromptMixin
+from matryoshka_experiment.evaluation.model_mixins import PrependPromptMixin
 
 OUR_TASKS = [("AmazonCounterfactualClassification", "This is prompt for AmazonCounterfactualClassification")]
 

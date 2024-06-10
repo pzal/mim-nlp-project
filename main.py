@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 
-from training_models.modules import create_sentence_transformer
+from matryoshka_experiment.training_models.modules import create_sentence_transformer
 
 load_dotenv(".public_env")
 
