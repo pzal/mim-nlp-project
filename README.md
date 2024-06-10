@@ -11,12 +11,10 @@ pip install -e .
 ## Usage
 
 ```bash
-
 # baseline training
-python3 -m matryoshka_experiment.training_models.train_baseline
+python3 src/scripts/train_baseline.py  
 
-# mteb eval
-python3 -m metryoshka_experiment.evaluation
-
+# mtab eval
+python3 src/scripts/evaluate_on_mtab.py
 ```
 
