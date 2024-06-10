@@ -2,7 +2,7 @@ import os
 import accelerate
 from dotenv import load_dotenv
 
-from datasets import load_from_disk
+from datasets import load_from_disk, load_dataset
 from sentence_transformers import (
     SentenceTransformer,
     losses,
@@ -31,7 +31,7 @@ def main():
 
     model = create_sentence_transformer("distilbert/distilroberta-base", output_dim=64)
 
-    dataset = load_from_disk("data/medi/medi.arrow")
+    dataset = load_dataset("mim-nlp-project/medi-joined")
 
     train_dataset = dataset["train"].select(range(10000)).select_columns(["anchor", "positive", "negative"])
     val_dataset = dataset["val"].select(range(1000)).select_columns(["anchor", "positive", "negative"])
@@ -61,11 +61,9 @@ def main():
         loss=loss,
         args=args,
     )
-    run = NeptuneCallback.get_run(trainer)
-    run["slurm_output"].upload_files("slurm_logs")
 
     trainer.train()
-    run["slurm_output"].upload_files("slurm_logs")
+
 
 
 if __name__ == "__main__":

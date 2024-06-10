@@ -16,7 +16,8 @@ setup(
         "tqdm",
         "pandas",
         "scikit-learn",
-        "neptune"
+        "neptune",
+        "mteb"
     ]
 
 )
