@@ -163,4 +163,5 @@ cython_debug/
 data/
 models/
 slurm_logs/
-.neptune/
+output
+.neptune

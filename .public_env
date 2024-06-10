@@ -1,2 +1,3 @@
-SENTENCE_TRANSFORMERS_HOME="models"
-NEPTUNE_PROJECT = "small-scale-matryoshka/embedding-models"
+SENTENCE_TRANSFORMERS_HOME="./models"
+OUTPUT_DIR="./output"
+NEPTUNE_PROJECT="small-scale-matryoshka/embedding-models"
