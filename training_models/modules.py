@@ -31,6 +31,9 @@ class LinearEmbeddingAdapter(nn.Module):
     with the names given in the input_names_to_convert list, by default to "sentence_embedding" and "token_embeddings".
 
     The hope is that this adapter will work gracefully with SentenceTransformerTrainer...
+    Possible point of failure: sentence_transformer library seems to relay on base.get_word_embedding_dimension() to get
+    dimensionality of the embeddings. I was this once in initialization of the SentenceTransformer, hope this is not the
+    case in the training code.
     """
 
     def __init__(self, original_dim: int, output_dim: int, input_names_to_convert: List[str] = None):
