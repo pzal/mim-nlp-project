@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from datasets import load_from_disk
 from sentence_transformers import SentenceTransformer, losses, SentenceTransformerTrainer, SentenceTransformerTrainingArguments
 from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
+import neptune
+from transformers.integrations import NeptuneCallback
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
@@ -57,8 +59,11 @@ def main():
         loss=loss,
         args=args,
     )
+    run = NeptuneCallback.get_run(trainer)
+    run["slurm_output"].upload_files("slurm_logs")
 
     trainer.train()
-
+    run["slurm_output"].upload_files("slurm_logs")
+    
 if __name__ == "__main__":
     main()
