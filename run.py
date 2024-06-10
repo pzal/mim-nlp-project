@@ -33,7 +33,7 @@ print(f"Number of CUDA devices: {torch.cuda.device_count()}")
 
 model = SentenceTransformer("distilbert/distilroberta-base", device="cuda")
 
-dataset = load_dataset("pzal/mim-nlp-project", revision="joined")
+dataset = load_dataset("mim-nlp-project/medi-joined")
 
 train_dataset = (
     dataset["train"]
