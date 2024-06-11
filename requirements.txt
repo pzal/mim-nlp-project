@@ -1,0 +1,7 @@
+accelerate==0.31.0
+datasets==2.19.2
+pandas==2.2.2
+python-dotenv==1.0.1
+scikit_learn==1.5.0
+sentence_transformers==3.0.1
+tqdm==4.66.4
