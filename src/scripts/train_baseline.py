@@ -35,6 +35,7 @@ def main():
 
     train_dataset = dataset["train"].select(range(10000)).select_columns(["anchor", "positive", "negative"])
     val_dataset = dataset["val"].select(range(1000)).select_columns(["anchor", "positive", "negative"])
+    test_dataset = dataset["test"].select(range(1000)).select_columns(["anchor", "positive", "negative"])
 
     loss = losses.TripletLoss(model=model)
     args = SentenceTransformerTrainingArguments(
@@ -46,12 +47,13 @@ def main():
         per_device_eval_batch_size=BATCH_SIZE,
         # Optional tracking/debugging parameters:
         eval_strategy="steps",
-        eval_steps=100,
+        eval_steps=100, # original maybe 2500
         save_strategy="steps",
-        save_steps=100,
+        save_steps=100,  # in final scale run maybe about 5000
         save_total_limit=2,
         logging_steps=100,
         report_to="neptune",
+        gradient_accumulation_steps=3
     )
 
     trainer = SentenceTransformerTrainer(
@@ -63,6 +65,7 @@ def main():
     )
 
     trainer.train()
+    trainer.evaluate(test_dataset)
 
 
 
