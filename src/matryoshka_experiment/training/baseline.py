@@ -43,7 +43,7 @@ def get_training_args(output_dir, epochs=1, learning_rate=None, batch_size_per_g
         dataloader_num_workers=os.cpu_count(),
         report_to=report_to,
         gradient_accumulation_steps=accumulation_steps,
-        save_total_limit=8,
+        save_total_limit=None,
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",  # Use validation loss to determine the best model
         greater_is_better=False,
@@ -133,9 +133,9 @@ def train_baseline(
         toggle_freeze_other_layers_in_ff_model(model, freeze=False)
     else:
         model = get_untrained_ff_model(embedding_size)
-    epochs = 1
+    epochs = 1.0
     learning_rate = None
-    output_dir = f"output_dir/baseline/finetuning/{embedding_size}"
+    output_dir = f"{os.environ['OUTPUT_DIR']}/baseline/finetuning/{embedding_size}"
     training_args = get_training_args(
         output_dir=output_dir,
         epochs=epochs,
@@ -159,7 +159,7 @@ def train_baseline(
     for checkpoint_step in extract_available_checkpoints(output_dir):
         path = str(Path(output_dir) / f"checkpoint-{checkpoint_step}")
         _model = SentenceTransformer(path)
-        branch = get_revision(checkpoint_step, type="finetuning")
+        branch = get_revision(checkpoint_step, version=version, type="finetuning")
         push_sentence_transformers_model_to_hf(_model, repo_id, branch)
 
     # Push the final model of finetuning
