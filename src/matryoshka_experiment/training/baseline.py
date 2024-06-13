@@ -88,7 +88,7 @@ def train_baseline(embedding_size, version, batch_size_per_gpu, tags: List[str] 
         output_dir=output_dir,
         epochs=epochs,
         learning_rate=learning_rate,
-        batch_size_per_gpu=batch_size_per_gpu,
+        batch_size_per_gpu=72,  # Here we have very few params
     )
     trainer = get_trainer(model, training_args)
     run = NeptuneCallback.get_run(trainer)
