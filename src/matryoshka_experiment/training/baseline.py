@@ -88,8 +88,8 @@ def train_baseline(embedding_size, version):
     trainer = get_trainer(model, training_args)
     run = NeptuneCallback.get_run(trainer)
     run["hyperparams"] = {
-        "custom_model_type": "baseline",
-        "custom_training_type": "pretraining",
+        "model_type": "baseline",
+        "training_type": "pretraining",
         "embedding_size": embedding_size,
         "epochs": epochs,
         "learning_rate": learning_rate,
@@ -116,8 +116,8 @@ def train_baseline(embedding_size, version):
     trainer = get_trainer(model, training_args)
     run = NeptuneCallback.get_run(trainer)
     run["hyperparams"] = {
-        "custom_model_type": "baseline",
-        "custom_training_type": "pretraining",
+        "model_type": "baseline",
+        "training_type": "pretraining",
         "embedding_size": embedding_size,
         "epochs": epochs,
         "learning_rate": learning_rate,
