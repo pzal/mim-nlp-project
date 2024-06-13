@@ -46,7 +46,7 @@ def get_training_args(output_dir, epochs=1, learning_rate=None, batch_size_per_g
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",  # Use validation loss to determine the best model
         greater_is_better=False,
-        learning_rate=learning_rate,
+        learning_rate=learning_rate or 5e-5,  # default from Transformers
         push_to_hub=False,
     )
     return training_args

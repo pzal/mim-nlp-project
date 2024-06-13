@@ -11,6 +11,7 @@ setup(
         "accelerate",
         "torch",
         "datasets",
+        "python-dotenv",
         "transformers",
         "sentence_transformers==3.0.1",
         "tqdm",
