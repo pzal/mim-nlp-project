@@ -12,9 +12,9 @@ pip install -e .
 
 ```bash
 # baseline training
-python3 src/scripts/train_baseline.py  
+python3 scripts/train.py --model baseline --embedding-size 64 --version v2
 
 # mtab eval
-python3 src/scripts/evaluate_on_mteb.py
+python3 scripts/evaluate_on_mteb.py
 ```
 
