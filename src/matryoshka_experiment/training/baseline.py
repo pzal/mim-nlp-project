@@ -66,6 +66,7 @@ def get_trainer(model, training_args):
 def train_baseline(embedding_size, version):
     assert os.environ["NEPTUNE_API_TOKEN"]
     assert os.environ["NEPTUNE_PROJECT"]
+    assert os.environ["OUTPUT_DIR"]
 
     repo_id = f"mim-nlp-project/ff-{embedding_size}"
     model = get_untrained_ff_model(embedding_size)
