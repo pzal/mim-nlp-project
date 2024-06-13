@@ -17,11 +17,12 @@ from matryoshka_experiment.utils import get_revision, extract_available_checkpoi
 from matryoshka_experiment.data import get_datasets
 
 
-def get_training_args(output_dir, epochs=1, learning_rate=None):
+def get_training_args(output_dir, epochs=1, learning_rate=None, batch_size_per_gpu=8):
     TARGET_BATCH_SIZE = 72
-    BATCH_SIZE = 8
 
-    accumulation_steps = TARGET_BATCH_SIZE / torch.cuda.device_count() / 8
+    accumulation_steps = (
+        TARGET_BATCH_SIZE / torch.cuda.device_count() / batch_size_per_gpu
+    )
     assert accumulation_steps % 1 == 0
 
     report_to = "none"
@@ -31,13 +32,14 @@ def get_training_args(output_dir, epochs=1, learning_rate=None):
     training_args = SentenceTransformerTrainingArguments(
         output_dir=output_dir,
         num_train_epochs=epochs,
-        per_device_train_batch_size=BATCH_SIZE,
-        per_device_eval_batch_size=BATCH_SIZE,
+        per_device_train_batch_size=batch_size_per_gpu,
+        per_device_eval_batch_size=batch_size_per_gpu,
         eval_strategy="steps",
         eval_steps=500,
         save_strategy="steps",
         save_steps=5000,
         logging_steps=100,
+        dataloader_num_workers=os.cpu_count(),
         report_to=report_to,
         gradient_accumulation_steps=accumulation_steps,
         save_total_limit=8,
@@ -63,7 +65,7 @@ def get_trainer(model, training_args):
     return trainer
 
 
-def train_baseline(embedding_size, version):
+def train_baseline(embedding_size, version, batch_size_per_gpu):
     assert os.environ["NEPTUNE_API_TOKEN"]
     assert os.environ["NEPTUNE_PROJECT"]
     assert os.environ["OUTPUT_DIR"]
@@ -85,6 +87,7 @@ def train_baseline(embedding_size, version):
         output_dir=output_dir,
         epochs=epochs,
         learning_rate=learning_rate,
+        batch_size_per_gpu=batch_size_per_gpu,
     )
     trainer = get_trainer(model, training_args)
     run = NeptuneCallback.get_run(trainer)
@@ -113,6 +116,7 @@ def train_baseline(embedding_size, version):
         output_dir=output_dir,
         epochs=epochs,
         learning_rate=learning_rate,
+        batch_size_per_gpu=batch_size_per_gpu,
     )
     trainer = get_trainer(model, training_args)
     run = NeptuneCallback.get_run(trainer)

@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model", choices=["baseline", "matryoshka"])
 parser.add_argument("--embedding-size", type=int)
 parser.add_argument("--version", type=str)
+parser.add_argument("--batch-size-per-gpu", type=int, default=8)
 command_args = parser.parse_args()
 
 ENV = dotenv_values(".public_env")
@@ -30,7 +31,9 @@ if n_gpus > 1:
 
 if command_args.model == "baseline":
     train_baseline(
-        embedding_size=command_args.embedding_size, version=command_args.version
+        embedding_size=command_args.embedding_size,
+        version=command_args.version,
+        batch_size_per_gpu=command_args.batch_size_per_gpu,
     )
 elif command_args.model == "matryoshka":
     raise NotImplementedError()
