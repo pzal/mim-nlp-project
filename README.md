@@ -22,7 +22,8 @@ Mandatory arguments:
 
 Optional arguments:
 - `--batch-size-per-gpu` : 8 by default
-- `--tag "some tag" --tag "some other tag"` (optional)
+- `--tag "some tag" --tag "some other tag"` [] by default
+- `--load-pretrained` False by default
 
 ### MTEB eval
 ```bash

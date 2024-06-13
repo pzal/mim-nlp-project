@@ -66,54 +66,64 @@ def get_trainer(model, training_args):
     return trainer
 
 
-def train_baseline(embedding_size, version, batch_size_per_gpu, tags: List[str] = None):
+def train_baseline(
+    embedding_size,
+    version,
+    batch_size_per_gpu,
+    tags: List[str] = None,
+    load_pretrained=False,
+):
     assert os.environ["NEPTUNE_API_TOKEN"]
     assert os.environ["NEPTUNE_PROJECT"]
     assert os.environ["OUTPUT_DIR"]
 
     repo_id = f"mim-nlp-project/ff-{embedding_size}"
-    model = get_untrained_ff_model(embedding_size)
 
-    # Let's save the untrained model
-    push_sentence_transformers_model_to_hf(
-        model, repo_id, branch=get_revision(0, version=version, type="pretraining")
-    )
+    if load_pretrained:
+        model = SentenceTransformer(repo_id, revision=f"{version}-pretraining-final")
+    else:
+        model = get_untrained_ff_model(embedding_size)
 
-    # First let's train the linear layer only
-    toggle_freeze_other_layers_in_ff_model(model, freeze=True)
-    epochs = 0.2
-    learning_rate = 0.02
-    output_dir = f"{os.environ['OUTPUT_DIR']}/baseline/pretraining/{embedding_size}"
-    training_args = get_training_args(
-        output_dir=output_dir,
-        epochs=epochs,
-        learning_rate=learning_rate,
-        batch_size_per_gpu=72,  # Here we have very few params
-    )
-    trainer = get_trainer(model, training_args)
-    run = NeptuneCallback.get_run(trainer)
-    run["hyperparams"] = {
-        "model_type": "baseline",
-        "training_type": "pretraining",
-        "embedding_size": embedding_size,
-        "epochs": epochs,
-        "learning_rate": learning_rate,
-    }
-    if tags:
-        run["sys/tags"].add(tags)
-    trainer.train()
+        # Let's save the untrained model
+        push_sentence_transformers_model_to_hf(
+            model, repo_id, branch=get_revision(0, version=version, type="pretraining")
+        )
 
-    # Save the checkpoints
-    for checkpoint_step in extract_available_checkpoints(output_dir):
-        path = str(Path(output_dir) / f"checkpoint-{checkpoint_step}")
-        _model = SentenceTransformer(path)
-        branch = get_revision(checkpoint_step, version=version, type="pretraining")
-        push_sentence_transformers_model_to_hf(_model, repo_id, branch)
+        # First let's train the linear layer only
+        toggle_freeze_other_layers_in_ff_model(model, freeze=True)
+        epochs = 0.2
+        learning_rate = 0.02
+        output_dir = f"{os.environ['OUTPUT_DIR']}/baseline/pretraining/{embedding_size}"
+        training_args = get_training_args(
+            output_dir=output_dir,
+            epochs=epochs,
+            learning_rate=learning_rate,
+            batch_size_per_gpu=72,  # Here we have very few params
+        )
+        trainer = get_trainer(model, training_args)
+        run = NeptuneCallback.get_run(trainer)
+        run["hyperparams"] = {
+            "model_type": "baseline",
+            "training_type": "pretraining",
+            "embedding_size": embedding_size,
+            "epochs": epochs,
+            "learning_rate": learning_rate,
+        }
+        if tags:
+            run["sys/tags"].add(tags)
+        trainer.train()
 
-    # Push the final model of pretraining
-    push_sentence_transformers_model_to_hf(
-        model, repo_id, branch=f"{version}-pretraining-final"
-    )
+        # Save the checkpoints
+        for checkpoint_step in extract_available_checkpoints(output_dir):
+            path = str(Path(output_dir) / f"checkpoint-{checkpoint_step}")
+            _model = SentenceTransformer(path)
+            branch = get_revision(checkpoint_step, version=version, type="pretraining")
+            push_sentence_transformers_model_to_hf(_model, repo_id, branch)
+
+        # Push the final model of pretraining
+        push_sentence_transformers_model_to_hf(
+            model, repo_id, branch=f"{version}-pretraining-final"
+        )
 
     # Now let's train the full model
     toggle_freeze_other_layers_in_ff_model(model, freeze=False)
