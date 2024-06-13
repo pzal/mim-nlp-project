@@ -79,7 +79,10 @@ def train_baseline(
 
     repo_id = f"mim-nlp-project/ff-{embedding_size}"
 
-    if load_pretrained:
+    if embedding_size == 768:
+        # There's no untrained Linear in this case.
+        pass
+    elif load_pretrained:
         model = SentenceTransformer(repo_id, revision=f"{version}-pretraining-final")
     else:
         model = get_untrained_ff_model(embedding_size)
@@ -126,7 +129,10 @@ def train_baseline(
         )
 
     # Now let's train the full model
-    toggle_freeze_other_layers_in_ff_model(model, freeze=False)
+    if embedding_size != 768:
+        toggle_freeze_other_layers_in_ff_model(model, freeze=False)
+    else:
+        model = get_untrained_ff_model(embedding_size)
     epochs = 1
     learning_rate = None
     output_dir = f"output_dir/baseline/finetuning/{embedding_size}"
