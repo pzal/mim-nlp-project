@@ -10,7 +10,7 @@ from sentence_transformers import (
 from transformers.integrations import NeptuneCallback
 from matryoshka_experiment.models import (
     get_untrained_ff_model,
-    toggle_freeze_linear_in_ff_model,
+    toggle_freeze_other_layers_in_ff_model,
     push_sentence_transformers_model_to_hf,
 )
 from matryoshka_experiment.utils import get_revision, extract_available_checkpoints
@@ -76,7 +76,7 @@ def train_baseline(embedding_size, version):
     )
 
     # First let's train the linear layer only
-    toggle_freeze_linear_in_ff_model(model, freeze=True)
+    toggle_freeze_other_layers_in_ff_model(model, freeze=True)
     epochs = 0.1
     learning_rate = 0.1
     output_dir = f"{os.environ['OUTPUT_DIR']}/baseline/pretraining/{embedding_size}"
@@ -104,7 +104,7 @@ def train_baseline(embedding_size, version):
         push_sentence_transformers_model_to_hf(model, repo_id, branch)
 
     # Now let's train the full model
-    toggle_freeze_linear_in_ff_model(model, freeze=False)
+    toggle_freeze_other_layers_in_ff_model(model, freeze=False)
     epochs = 1
     learning_rate = None
     output_dir = f"output_dir/baseline/finetuning/{embedding_size}"

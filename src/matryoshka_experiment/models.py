@@ -32,7 +32,7 @@ def push_trained_ff_model(model, embedding_size, checkpoint_step, version):
     push_sentence_transformers_model_to_hf(model, repo_id, revision)
 
 
-def toggle_freeze_linear_in_ff_model(model, freeze=True):
+def toggle_freeze_other_layers_in_ff_model(model, freeze=True):
     for name, param in model.named_parameters():
         if "2.linear_layers" not in name:
             param.requires_grad = not freeze
