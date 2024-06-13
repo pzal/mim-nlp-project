@@ -1,11 +1,11 @@
 # mim-nlp-project
 
-
 ## Installation
 
-```bash
-pip install -e .
-```
+- ```bash
+  pip install -e .
+  ```
+- Create `.env` file and provide your `NEPTUNE_API_TOKEN`. Optionally override values from `.public_env`.
 
 
 ## Usage
@@ -14,7 +14,6 @@ pip install -e .
 # baseline training
 python3 scripts/train.py --model baseline --embedding-size 64 --version v2
 
-# mtab eval
+# MTEB eval
 python3 scripts/evaluate_on_mteb.py
-```
-
+````
