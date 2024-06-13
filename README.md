@@ -13,7 +13,7 @@
 
 ```bash
 # baseline training
-python3 scripts/train.py --model baseline --embedding-size 64 --version v2 --batch-size-per-gpu 8
+python3 scripts/train.py --model baseline --embedding-size 64 --version v2 --batch-size-per-gpu 8 --tag <your_tag_for_neptune>
 
 # MTEB eval
 python3 scripts/evaluate_on_mteb.py

@@ -1,5 +1,6 @@
 import os
 import torch
+from typing import List
 from pathlib import Path
 from sentence_transformers import (
     SentenceTransformer,
@@ -65,7 +66,7 @@ def get_trainer(model, training_args):
     return trainer
 
 
-def train_baseline(embedding_size, version, batch_size_per_gpu):
+def train_baseline(embedding_size, version, batch_size_per_gpu, tags: List[str] = None):
     assert os.environ["NEPTUNE_API_TOKEN"]
     assert os.environ["NEPTUNE_PROJECT"]
     assert os.environ["OUTPUT_DIR"]
@@ -80,8 +81,8 @@ def train_baseline(embedding_size, version, batch_size_per_gpu):
 
     # First let's train the linear layer only
     toggle_freeze_other_layers_in_ff_model(model, freeze=True)
-    epochs = 0.1
-    learning_rate = 0.1
+    epochs = 0.2
+    learning_rate = 0.02
     output_dir = f"{os.environ['OUTPUT_DIR']}/baseline/pretraining/{embedding_size}"
     training_args = get_training_args(
         output_dir=output_dir,
@@ -98,6 +99,8 @@ def train_baseline(embedding_size, version, batch_size_per_gpu):
         "epochs": epochs,
         "learning_rate": learning_rate,
     }
+    if tags:
+        run["sys/tags"].add(tags)
     trainer.train()
 
     # Save the checkpoints
@@ -122,11 +125,13 @@ def train_baseline(embedding_size, version, batch_size_per_gpu):
     run = NeptuneCallback.get_run(trainer)
     run["hyperparams"] = {
         "model_type": "baseline",
-        "training_type": "pretraining",
+        "training_type": "finetuning",
         "embedding_size": embedding_size,
         "epochs": epochs,
         "learning_rate": learning_rate,
     }
+    if tags:
+        run["sys/tags"].add(tags)
     trainer.train()
 
     # Save the checkpoints
