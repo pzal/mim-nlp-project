@@ -36,9 +36,9 @@ def get_training_args(output_dir, epochs=1, learning_rate=None, batch_size_per_g
         per_device_train_batch_size=batch_size_per_gpu,
         per_device_eval_batch_size=batch_size_per_gpu,
         eval_strategy="steps",
-        eval_steps=500,
+        eval_steps=1000,
         save_strategy="steps",
-        save_steps=5000,
+        save_steps=1000,
         logging_steps=100,
         dataloader_num_workers=os.cpu_count(),
         report_to=report_to,
@@ -106,9 +106,14 @@ def train_baseline(embedding_size, version, batch_size_per_gpu, tags: List[str] 
     # Save the checkpoints
     for checkpoint_step in extract_available_checkpoints(output_dir):
         path = str(Path(output_dir) / f"checkpoint-{checkpoint_step}")
-        model = SentenceTransformer(path)
+        _model = SentenceTransformer(path)
         branch = get_revision(checkpoint_step, version=version, type="pretraining")
-        push_sentence_transformers_model_to_hf(model, repo_id, branch)
+        push_sentence_transformers_model_to_hf(_model, repo_id, branch)
+
+    # Push the final model of pretraining
+    push_sentence_transformers_model_to_hf(
+        model, repo_id, branch=f"{version}-pretraining-final"
+    )
 
     # Now let's train the full model
     toggle_freeze_other_layers_in_ff_model(model, freeze=False)
@@ -137,9 +142,14 @@ def train_baseline(embedding_size, version, batch_size_per_gpu, tags: List[str] 
     # Save the checkpoints
     for checkpoint_step in extract_available_checkpoints(output_dir):
         path = str(Path(output_dir) / f"checkpoint-{checkpoint_step}")
-        model = SentenceTransformer(path)
+        _model = SentenceTransformer(path)
         branch = get_revision(checkpoint_step, type="finetuning")
-        push_sentence_transformers_model_to_hf(model, repo_id, branch)
+        push_sentence_transformers_model_to_hf(_model, repo_id, branch)
+
+    # Push the final model of finetuning
+    push_sentence_transformers_model_to_hf(
+        model, repo_id, branch=f"{version}-finetuning-final"
+    )
 
     # TODO
     # evaluator = TripletEvaluator(

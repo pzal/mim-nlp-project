@@ -11,10 +11,20 @@
 
 ## Usage
 
+### Baseline training
 ```bash
-# baseline training
 python3 scripts/train.py --model baseline --embedding-size 64 --version v2 --batch-size-per-gpu 8 --tag <your_tag_for_neptune>
+```
+Mandatory arguments:
+- `--model` _baseline | matryoshka_
+- `--embedding-size` _int_
+- `--version` _string_
 
-# MTEB eval
+Optional arguments:
+- `--batch-size-per-gpu` : 8 by default
+- `--tag "some tag" --tag "some other tag"` (optional)
+
+### MTEB eval
+```bash
 python3 scripts/evaluate_on_mteb.py
 ````
