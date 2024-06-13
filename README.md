@@ -5,7 +5,8 @@
 - ```bash
   pip install -e .
   ```
-- Create `.env` file and provide your `NEPTUNE_API_TOKEN`. Optionally override values from `.public_env`.
+- Create `.env` file and provide your `NEPTUNE_API_TOKEN` and `HF_TOKEN` token (with write access). Optionally override values from `.public_env`.
+- You need HuggingFace initialized (logged in).
 
 
 ## Usage

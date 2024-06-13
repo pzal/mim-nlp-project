@@ -17,6 +17,7 @@ ENV.update(dotenv_values(".env"))
 os.environ["NEPTUNE_API_TOKEN"] = ENV["NEPTUNE_API_TOKEN"]
 os.environ["NEPTUNE_PROJECT"] = ENV["NEPTUNE_PROJECT"]
 os.environ["OUTPUT_DIR"] = ENV["OUTPUT_DIR"]
+os.environ["HF_TOKEN"] = ENV["HF_TOKEN"]
 
 print(f"CUDA available: {torch.cuda.is_available()}")
 n_gpus = torch.cuda.device_count()
