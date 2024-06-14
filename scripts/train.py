@@ -4,10 +4,11 @@ import argparse
 import torch
 
 from matryoshka_experiment.training.baseline import train_baseline
+from matryoshka_experiment.training.matryoshka import train_matryoshka
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", choices=["baseline", "matryoshka"])
-parser.add_argument("--embedding-size", type=int)
+parser.add_argument("--embedding-size", type=int, default=None)
 parser.add_argument("--version", type=str)
 parser.add_argument("--batch-size-per-gpu", type=int, default=8)
 parser.add_argument("--tag", type=str, action="append")
@@ -34,6 +35,7 @@ if n_gpus > 1:
     os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
 if command_args.model == "baseline":
+    assert command_args.embedding_size is not None
     train_baseline(
         embedding_size=command_args.embedding_size,
         version=command_args.version,
@@ -42,4 +44,8 @@ if command_args.model == "baseline":
         load_pretrained=command_args.load_pretrained,
     )
 elif command_args.model == "matryoshka":
-    raise NotImplementedError()
+    train_matryoshka(
+        version=command_args.version,
+        batch_size_per_gpu=command_args.batch_size_per_gpu,
+        tags=command_args.tag,
+    )

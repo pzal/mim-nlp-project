@@ -1,6 +1,4 @@
 from typing import Literal
-import re
-import os
 from huggingface_hub import HfApi
 from sentence_transformers import (
     SentenceTransformer,
@@ -29,19 +27,3 @@ def push_sentence_transformers_model_to_hf(model: SentenceTransformer, repo_id, 
     except Exception:
         print("Branch does not exist yet")
     api.create_branch(repo_id=repo_id, branch=branch)
-
-
-def extract_available_checkpoints(directory_path):
-    pattern = re.compile(r"checkpoint-(\d+)")
-    checkpoint_numbers = []
-
-    for item in os.listdir(directory_path):
-        item_path = os.path.join(directory_path, item)
-
-        if os.path.isdir(item_path):
-            match = pattern.match(item)
-            if match:
-                number = int(match.group(1))
-                checkpoint_numbers.append(number)
-
-    return checkpoint_numbers
