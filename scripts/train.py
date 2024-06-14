@@ -5,9 +5,14 @@ import torch
 
 from matryoshka_experiment.training.baseline import train_baseline
 from matryoshka_experiment.training.matryoshka import train_matryoshka
+from matryoshka_experiment.training.baseline_to_matryoshka import (
+    train_baseline_to_matryoshka,
+)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--model", choices=["baseline", "matryoshka"])
+parser.add_argument(
+    "--model", choices=["baseline", "matryoshka", "baseline-to-matryoshka"]
+)
 parser.add_argument("--embedding-size", type=int, default=None)
 parser.add_argument("--version", type=str)
 parser.add_argument("--batch-size-per-gpu", type=int, default=8)
@@ -45,6 +50,12 @@ if command_args.model == "baseline":
     )
 elif command_args.model == "matryoshka":
     train_matryoshka(
+        version=command_args.version,
+        batch_size_per_gpu=command_args.batch_size_per_gpu,
+        tags=command_args.tag,
+    )
+elif command_args.model == "baseline-to-matryoshka":
+    train_baseline_to_matryoshka(
         version=command_args.version,
         batch_size_per_gpu=command_args.batch_size_per_gpu,
         tags=command_args.tag,
