@@ -45,18 +45,19 @@ dataset = Dataset.from_pandas(df)
 
 seed = 42
 train_indices, val_indices = train_test_split(
-    range(len(dataset)), test_size=20000, stratify=df["task_name"], random_state=seed
+    range(len(dataset)), test_size=0.2, stratify=df["task_name"], random_state=seed
 )
-train_indices, test_indices = train_test_split(
-    train_indices,
-    test_size=200000,
-    stratify=df["task_name"][train_indices],
+val_indices, test_indices = train_test_split(
+    val_indices,
+    test_size=0.9,
+    stratify=df["task_name"][val_indices],
     random_state=seed,
 )
 
 train_dataset = dataset.select(train_indices)
 val_dataset = dataset.select(val_indices)
+test_dataset = dataset.select(test_indices)
 
-dataset_dict = DatasetDict({"train": train_dataset, "val": val_dataset})
+dataset_dict = DatasetDict({"train": train_dataset, "val": val_dataset, "test": test_dataset})
 
 dataset_dict.push_to_hub(HF_DATASET_REPO, revision=REVISION, private=True)
