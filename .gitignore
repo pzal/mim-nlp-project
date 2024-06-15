@@ -165,3 +165,4 @@ models/
 slurm_logs/
 output
 .neptune
+evaluation_results
