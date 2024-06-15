@@ -59,5 +59,5 @@ class LinearEmbeddingAdapter(nn.Module):
             config = json.load(fIn)
         adapter = LinearEmbeddingAdapter(**config)
         # Load the state dictionary of the linear layers
-        adapter.linear_layers.load_state_dict(torch.load(os.path.join(input_path, "linear_layers.pt")))
+        adapter.linear_layers.load_state_dict(torch.load(os.path.join(input_path, "linear_layers.pt"), map_location="cpu"))
         return adapter
