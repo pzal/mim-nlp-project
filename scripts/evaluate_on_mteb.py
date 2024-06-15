@@ -1,4 +1,4 @@
-
+from itertools import product
 
 import mteb
 from sentence_transformers import SentenceTransformer
@@ -36,12 +36,12 @@ def main():
         for task_name, prompt in OUR_TASKS:
             model = PrependPromptMixin(prompt, model, debug=False)
             print(f"Model: {model_type}, Dimensionality: {dimensionality}, Task: {task_name}")
-            # tasks = mteb.get_tasks(tasks=[task_name])
-            # evaluation = mteb.MTEB(tasks, task_langs=["en"])
-            # results = evaluation.run(
-            #     model,
-            #     output_folder=f"evaluation_results/{model_type}_{dimensionality}/{task_name}",
-            # )
+            tasks = mteb.get_tasks(tasks=[task_name], languages=["eng"])
+            evaluation = mteb.MTEB(tasks, task_langs=["eng"])
+            results = evaluation.run(
+                model,
+                output_folder=f"evaluation_results/{model_type}_{dimensionality}/{task_name}",
+            )
             # print(results)
 
 
