@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test_job
+#SBATCH --job-name=eval_on_mteb
 #SBATCH --partition=common
 #SBATCH --qos=3gpu1d
 #SBATCH --mail-type=BEGIN,END,FAIL # Mail events
@@ -17,6 +17,6 @@ nvidia-smi -L
 source /home/pw43/mim-nlp-project/.venv/bin/activate
 cd /home/pw43/mim-nlp-project
 
-python3 src/scripts/evaluate_on_mteb.py
+python3 scripts/evaluate_on_mteb.py
 
 date
