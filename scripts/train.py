@@ -13,6 +13,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--model", choices=["baseline", "matryoshka", "baseline-to-matryoshka"]
 )
+parser.add_argument(
+    "--initial-model-revision", type=str, default=None
+)
 parser.add_argument("--embedding-size", type=int, default=None)
 parser.add_argument("--version", type=str)
 parser.add_argument("--batch-size-per-gpu", type=int, default=8)
@@ -53,6 +56,7 @@ elif command_args.model == "matryoshka":
         version=command_args.version,
         batch_size_per_gpu=command_args.batch_size_per_gpu,
         tags=command_args.tag,
+        initial_model_revision=command_args.initial_model_revision,
     )
 elif command_args.model == "baseline-to-matryoshka":
     train_baseline_to_matryoshka(

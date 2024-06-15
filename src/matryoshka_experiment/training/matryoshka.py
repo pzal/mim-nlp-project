@@ -41,6 +41,7 @@ def train_matryoshka(
     version,
     batch_size_per_gpu,
     tags: List[str] = None,
+    initial_model_revision=None,
 ):
     assert os.environ["NEPTUNE_API_TOKEN"]
     assert os.environ["NEPTUNE_PROJECT"]
@@ -48,7 +49,10 @@ def train_matryoshka(
 
     repo_id = "mim-nlp-project/mrl"
 
-    model = get_untrained_mrl_model()
+    if initial_model_revision:
+        model = SentenceTransformer(repo_id, revision=initial_model_revision)
+    else:
+        model = get_untrained_mrl_model()
 
     # Let's save the untrained model
     push_sentence_transformers_model_to_hf(
